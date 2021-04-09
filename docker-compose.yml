@@ -1,0 +1,30 @@
+version: "3"
+services:
+        dbos:
+                image: mysql:5.7
+                restart: always
+                environment:
+                        MYSQL_ROOT_PASSWORD: redhat
+                        MYSQL_USER: sai
+                        MYSQL_PASSWORD: sai@redhat
+                        MYSQL_DATABASE: mydb
+                volumes:
+                        - sql_storage_new:/var/lib/mysql
+        wpos:
+                image: wordpress:5.1.1-php7.3-apache
+                restart: always
+                depends_on:
+                        - dbos
+                ports:
+                        - 8081:80
+                environment:
+                        WORDPRESS_DB_HOST: dbos
+                        WORDPRESS_DB_USER: sai
+                        WORDPRESS_DB_PASSWORD: sai@redhat
+                        WORDPRESS_DB_NAME: mydb
+                volumes:
+                        - wp_storage_new:/var/www/html
+volumes:
+        wp_storage_new:
+        sql_storage_new:
+
